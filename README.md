@@ -52,3 +52,9 @@ for(let [tally,val] of mm){
 //Map(3) {{a:"a"} => 1, {b:"b"} => 1, {c:"c"} => 1} 'cab'
 //Map(2) {{c:"c"} => 2, {a:"a"} => 1, } 'cac'
 ```
+
+## Setting up the development environment
+All of my libraries are made with the minimum dependency principle in mind.  
+That means, no fancy framework for testing, and build is done with bare minimum typescript.  
+After all, there are so many complex settings that is required to get dev frameworks to get it working in your favor. Also it is trotzdem easier to write everything by yourself.  
+I mean guck mal das Test Script an, they are together around 100 lines, and it is dirt clear what it is doing.

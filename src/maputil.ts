@@ -1,4 +1,4 @@
-export const mapeq = function(a: Map<any, any>, b: Map<any, any>,cb): boolean{
+export const mapeq = function<T1, T2>(a: Map<any, T1>, b: Map<any, T2>, cb?: (a: T1, b: T2)=>boolean): boolean{
     if(a.size !== b.size){
         return false;
     }
@@ -11,7 +11,7 @@ export const mapeq = function(a: Map<any, any>, b: Map<any, any>,cb): boolean{
     }else{
         for(let [key,val1] of a){
             if(!b.has(key))return false;
-            let val2 = b.get(key);
+            let val2 = b.get(key)!;
             if(!cb(val1,val2))return false;
         }
     }

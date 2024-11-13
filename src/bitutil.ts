@@ -1,9 +1,13 @@
-export const showBits = function(n: number){
+export const int32ToBitString = function(n: number){
     let s = "";
     for(let i = 31; i >= 0; i--){
         s += ((n>>i)&1);
     }
-    console.log(s);
+    return s;
+}
+
+export const showBits = function(n: number){
+    console.log(int32ToBitString(n));
 };
 
 export const rand32 = (()=>{

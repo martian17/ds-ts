@@ -15,7 +15,9 @@ export const arrcpy = function<T>(arr: T[]): T[]{
 };
 
 export const arrcpyDepth = function<T extends Array<any>>(arr: T, n: number): T{
-    if(n === 1){
+    if(!(arr instanceof Array)){
+        return arr;
+    }else if(n === 1){
         return arrcpy(arr) as T;
     }else{
         return arr.map(a=>arrcpyDepth(a,n-1)) as T;
@@ -40,12 +42,13 @@ export const range = function(a: number, b?: number){
     return arr;
 };
 
-export const arreq = function(a: any[], b: any[], cb: (a: any, b: any) => boolean): boolean{
+export const arreq = function<T1, T2>(a: T1[], b: T2[], cb?: (a: T1, b: T2) => boolean): boolean{
     if(a.length !== b.length){
         return false;
     }
     if(!cb){
         for(let i = 0; i < a.length; i++){
+            // @ts-ignore
             if(a[i] !== b[i])return false;
         }
     }else{
@@ -56,7 +59,7 @@ export const arreq = function(a: any[], b: any[], cb: (a: any, b: any) => boolea
     return true;
 };
 
-export const arrSplit = function<T extends Array<any>>(arr: T, comp: any, inclusive: boolean): T[]{
+export const arrSplit = function<T extends Array<any>>(arr: T, comp: any, inclusive: boolean = false): T[]{
     let res = [];
     let top = [];
     for(let val of arr){

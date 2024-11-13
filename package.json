@@ -1,16 +1,22 @@
 {
-  "name": "ds-js",
+  "name": "@martian17/ds-js",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "arrutil.mjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx tsx test/test.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "eslint": "^8.38.0",
+    "@types/node": "^22.9.0",
+    "eslint": "^9.14.0",
+    "objdiff-iterator": "^1.0.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
     "typescript": "^5.6.3"
   }
 }
