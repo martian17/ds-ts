@@ -1,9 +1,11 @@
 {
-  "name": "@martian17/ds-js",
+  "name": "@martian17/ds-ts",
+  "repository": "martian17/ds-ts",
+  "homepage": "https://github.com/martian17/ds-ts",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
-  "main": "arrutil.mjs",
+  "main": "./lib/arrutil.mjs",
   "scripts": {
     "test": "npx tsx test/test.ts",
     "build": "tsc"
@@ -18,5 +20,8 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3"
-  }
+  },
+  "files": [
+    "lib/*"
+  ]
 }
