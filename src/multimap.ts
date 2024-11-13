@@ -1,4 +1,4 @@
-import {arrcpy,arreq} from "./arrutil";
+import {arreq} from "./arrutil";
 import {rand32,shiftCombine32} from "./bitutil";
 import {newMapTally,mapeq} from "./maputil";
 
@@ -6,9 +6,9 @@ export class MultiMap<Keys extends any[], Value>{
     map = new Map<Keys[number], any>;
     own = Symbol();// unique value that doesn't collide
     size = 0;
-    set(){
-        let lst = [...arguments];
-        let val = lst.pop();
+    set(...args: [...Keys, Value]): Value{
+        let val = args.pop() as Value;
+        let lst = [...args] as Keys;
         let map = this.map;
         for(let k of lst){
             if(!map.has(k))map.set(k,new Map);
@@ -54,16 +54,14 @@ export class MultiMap<Keys extends any[], Value>{
         return ret;
     }
     
-    *iterator(): Iterator<[...Keys, Value]>{
+    *iterator(): Iterator<[Keys, Value]>{
         let keys = [];
         let own = this.own;
-        // @ts-ignore
-        let traverse = function*(map){
-            for(let [key,val] of map){shiftCombine32
+        const that = this;
+        let traverse = function*(map: typeof that.map): Generator<[Keys, Value]>{
+            for(let [key,val] of map){
                 if(key === own){
-                    let res = arrcpy(keys);
-                    res.push(val);
-                    yield res;
+                    yield [[...keys] as Keys, val as Value];
                 }else{
                     keys.push(key);
                     yield* traverse(val);
@@ -86,7 +84,7 @@ export class MultiMapAlpha<Keys extends any[], Value>{
     size = 0;
     
     //sum of all hashes
-    createMush(lst: Keys): number{
+    private createMush(lst: Keys): number{
         let {hashes} = this;
         let mush = 0;
         for(let obj of lst){
@@ -102,7 +100,7 @@ export class MultiMapAlpha<Keys extends any[], Value>{
         return mush;
     }
     
-    getMush(lst: Keys): [number, boolean]{//[mush,err]
+    private getMush(lst: Keys): [number, boolean]{//[mush,err]
         let {contentMap,hashes} = this;
         let mush = 0;
         for(let obj of lst){
@@ -120,7 +118,7 @@ export class MultiMapAlpha<Keys extends any[], Value>{
         return [mush,false];
     }
     
-    getBucket(lst: Keys): [Keys, Value][] | null{
+    private getBucket(lst: Keys): [Keys, Value][] | null{
         let [mush,err] = this.getMush(lst);
         if(err){
             return null;
@@ -128,7 +126,7 @@ export class MultiMapAlpha<Keys extends any[], Value>{
         return this.contentMap.get(mush) || null;
     }
     // Possibly unnecessary
-    incrementUses(lst: Keys){
+    private incrementUses(lst: Keys){
         let {uses} = this;
         for(let obj of lst){
             if(uses.has(obj)){
@@ -139,7 +137,7 @@ export class MultiMapAlpha<Keys extends any[], Value>{
         }
     }
     
-    hasHashes(lst: Keys){
+    private hasHashes(lst: Keys){
         let {hashes} = this;
         for(let obj of lst){
             if(!hashes.has(obj)){
@@ -149,7 +147,7 @@ export class MultiMapAlpha<Keys extends any[], Value>{
         return true;
     }
     // Gleichweis unnecessesary
-    decrementUses(lst: Keys){
+    private decrementUses(lst: Keys){
         let {uses,hashes} = this;
         for(let obj of lst){
             if(uses.has(obj)){
@@ -263,7 +261,7 @@ export class OrderAgnosticMultiMap<Keys extends any[], Value>{
     size = 0;
 
     //sum of all hashes
-    createMush(tally: Map<Keys[number], number>){
+    private createMush(tally: Map<Keys[number], number>){
         let {hashes} = this;
         let mush = 0;
         for(let [obj,cnt] of tally){
@@ -279,7 +277,7 @@ export class OrderAgnosticMultiMap<Keys extends any[], Value>{
         return mush;
     }
     
-    getMush(tally: Map<Keys[number], number>): [0, true] | [number, false]{//[mush,err]
+    private getMush(tally: Map<Keys[number], number>): [0, true] | [number, false]{//[mush,err]
         let {contentMap,hashes} = this;
         let mush = 0;
         for(let [obj,cnt] of tally){
@@ -297,7 +295,7 @@ export class OrderAgnosticMultiMap<Keys extends any[], Value>{
         return [mush,false];
     }
     
-    getBucket(tally: Map<Keys[number], number>){
+    private getBucket(tally: Map<Keys[number], number>){
         let [mush,err] = this.getMush(tally);
         if(err){
             return null;
@@ -305,7 +303,7 @@ export class OrderAgnosticMultiMap<Keys extends any[], Value>{
         return this.contentMap.get(mush)!;
     }
     
-    incrementUses(tally: Map<Keys[number], number>){
+    private incrementUses(tally: Map<Keys[number], number>){
         let {uses} = this;
         for(let [obj,cnt] of tally){
             if(uses.has(obj)){
@@ -316,7 +314,7 @@ export class OrderAgnosticMultiMap<Keys extends any[], Value>{
         }
     }
     
-    hasHashes(tally: Map<Keys[number], number>){
+    private hasHashes(tally: Map<Keys[number], number>){
         let {hashes} = this;
         for(let [obj] of tally){
             if(!hashes.has(obj)){
@@ -326,7 +324,7 @@ export class OrderAgnosticMultiMap<Keys extends any[], Value>{
         return true;
     }
     
-    decrementUses(tally: Map<Keys[number], number>){
+    private decrementUses(tally: Map<Keys[number], number>){
         let {uses,hashes} = this;
         for(let [obj,cnt] of tally){
             if(uses.has(obj)){
@@ -435,6 +433,7 @@ export class OrderAgnosticMultiMap<Keys extends any[], Value>{
 export class MultiWeakMap<Keys extends any[], Value> extends MultiMap<Keys, Value>{
     // @ts-ignore
     map = new WeakMap<Keys[number], any>;
+    // only implements set(), get(), and has()
     set(){
         let lst = [...arguments];
         let val = lst.pop();
@@ -446,5 +445,17 @@ export class MultiWeakMap<Keys extends any[], Value> extends MultiMap<Keys, Valu
         if(!map.has(this.own))this.size++;
 		map.set(this.own,val);// to avoid collision between the same level
         return val;
+    }
+    // @ts-ignore
+    delete(){
+        throw new Error("Delete cannot be called on a MultiWeakMap")
+    }
+
+    *iterator(): Iterator<[Keys, Value]>{
+        throw new Error("Iterator cannot be called on a MultiWeakMap");
+    }
+    // @ts-ignore
+    [Symbol.iterator](){
+        throw new Error("Symbol.iterator cannot be called on a MultiWeakMap");
     }
 }

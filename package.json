@@ -3,7 +3,7 @@
   "repository": "martian17/ds-ts",
   "homepage": "https://github.com/martian17/ds-ts",
   "type": "module",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "./lib/arrutil.mjs",
   "scripts": {

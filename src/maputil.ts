@@ -26,14 +26,6 @@ export const mapFromObj = function<T>(obj: {[key: string]: T}): Map<string, T>{
     return map;
 };
 
-export const mapFromEntries = function <T extends [unknown, unknown]>(arr: T[]): Map<T[0], T[1]> {
-    let map = new Map;
-    for(let [key,val] of arr){
-        map.set(key,val);
-    }
-    return map;
-};
-
 export const newMapTally = function<T>(lst: T[]): Map<T, number>{
     let map = new Map;
     for(let val of lst){
