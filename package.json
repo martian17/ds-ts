@@ -7,8 +7,9 @@
   "description": "",
   "main": "./lib/arrutil.mjs",
   "scripts": {
-    "test": "npx tsx test/test.ts",
-    "build": "tsc"
+    "test": "npx tsx scripts/test.ts",
+    "build": "tsc",
+    "docs-build": "npx tsx scripts/docs-build.ts"
   },
   "keywords": [],
   "author": "",

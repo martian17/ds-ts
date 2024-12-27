@@ -21,6 +21,7 @@ export const test = function(name: string, fn: ()=>void){
         if(err instanceof TestError){
             console.log(`${BGRED}Error${RESET}: ` + (err as Error).message);
         }else{
+            console.log(`${BGRED}Error${RESET}: ` + (err as Error).message);
             console.error(err);
         }
     }

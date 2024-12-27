@@ -3,8 +3,8 @@ import {rand32,shiftCombine32} from "./bitutil";
 import {newMapTally,mapeq} from "./maputil";
 
 export class MultiMap<Keys extends any[], Value>{
-    map = new Map<Keys[number], any>;
-    own = Symbol();// unique value that doesn't collide
+    private map = new Map<Keys[number], any>;
+    protected own = Symbol();// unique value that doesn't collide
     size = 0;
     set(...args: [...Keys, Value]): Value{
         let val = args.pop() as Value;
@@ -78,9 +78,9 @@ export class MultiMap<Keys extends any[], Value>{
 
 
 export class MultiMapAlpha<Keys extends any[], Value>{
-    hashes = new Map<any, number>;
-    uses = new Map;
-    contentMap = new Map<number, [Keys, Value][]>;
+    private hashes = new Map<any, number>;
+    private uses = new Map;
+    private contentMap = new Map<number, [Keys, Value][]>;
     size = 0;
     
     //sum of all hashes
@@ -255,9 +255,9 @@ export class MultiMapAlpha<Keys extends any[], Value>{
 
 
 export class OrderAgnosticMultiMap<Keys extends any[], Value>{
-    hashes = new Map;
-    uses = new Map;
-    contentMap = new Map<number,[Map<Keys[number], number>, Value][]>;
+    private hashes = new Map;
+    private uses = new Map;
+    private contentMap = new Map<number,[Map<Keys[number], number>, Value][]>;
     size = 0;
 
     //sum of all hashes
@@ -432,7 +432,7 @@ export class OrderAgnosticMultiMap<Keys extends any[], Value>{
 
 export class MultiWeakMap<Keys extends any[], Value> extends MultiMap<Keys, Value>{
     // @ts-ignore
-    map = new WeakMap<Keys[number], any>;
+    private map = new WeakMap<Keys[number], any>;
     // only implements set(), get(), and has()
     set(){
         let lst = [...arguments];
@@ -446,16 +446,17 @@ export class MultiWeakMap<Keys extends any[], Value> extends MultiMap<Keys, Valu
 		map.set(this.own,val);// to avoid collision between the same level
         return val;
     }
+    // These methods from the parent class need to be disabled
     // @ts-ignore
-    delete(){
+    private delete(){
         throw new Error("Delete cannot be called on a MultiWeakMap")
     }
 
-    *iterator(): Iterator<[Keys, Value]>{
+    private *iterator(): Iterator<[Keys, Value]>{
         throw new Error("Iterator cannot be called on a MultiWeakMap");
     }
     // @ts-ignore
-    [Symbol.iterator](){
+    private [Symbol.iterator](){
         throw new Error("Symbol.iterator cannot be called on a MultiWeakMap");
     }
 }

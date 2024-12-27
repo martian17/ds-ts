@@ -1,4 +1,4 @@
-import { test, expect } from "../test/test-util";
+import { test, expect } from "../scripts/test-util";
 import {
     newarr,
     arrcpy,
@@ -9,8 +9,10 @@ import {
     arrLoopBack,
     peek,
 } from "./arrutil";
+// @docs.arrutil
 
 test("newarr", () => {
+    // @example.newarr
     const arr = newarr(5);
     expect(arr.length).toBe(5);
     expect(arr).toBe([0,0,0,0,0]);
@@ -54,9 +56,11 @@ test("arreq", () => {
 
 test("arrSplit", () => {
     expect(arrSplit(["a","b","c",",","w","q","e","d",",","a","d","c"],","))
-    .toBe([["a","b","c"],["w","q","e","d"],["a","d","c"]])
+    .toBe([["a","b","c"],["w","q","e","d"],["a","d","c"]]);
     expect(arrSplit(["a","b","c",",","w","q","e","d",",","a","d","c"],",", true))
-    .toBe([["a","b","c",","],["w","q","e","d",","],["a","d","c"]])
+    .toBe([["a","b","c",","],["w","q","e","d",","],["a","d","c"]]);
+    expect(arrSplit(["a","2","c",",","w","5","e","d",",","3","d","c"],v=>(v.match(/[0-9]/))))
+    .toBe([["a"],["c",",","w"],["e","d",","],["d","c"]]);
 });
 
 test("arrLoopBack", () => {

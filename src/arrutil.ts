@@ -59,11 +59,16 @@ export const arreq = function<T1, T2>(a: T1[], b: T2[], cb?: (a: T1, b: T2) => b
     return true;
 };
 
-export const arrSplit = function<T extends Array<any>>(arr: T, comp: any, inclusive: boolean = false): T[]{
+export function arrSplit<T>(arr: T[], comp: ((item: T, i: number)=>any) | T, inclusive: boolean | undefined = undefined, isLiteral: boolean = false): T[][]{
     let res = [];
     let top = [];
-    for(let val of arr){
-        if(val === comp){
+    const compIsCallback = comp instanceof Function && !isLiteral;
+    for(let i = 0; i < arr.length; i++){
+        const val = arr[i];
+        if(
+            (compIsCallback && comp(val, i)) ||
+            (!compIsCallback && (val === comp))
+        ){
             if(inclusive)top.push(val);
             res.push(top);
             top = [];
@@ -72,7 +77,7 @@ export const arrSplit = function<T extends Array<any>>(arr: T, comp: any, inclus
         }
     }
     res.push(top);
-    return res as T[];
+    return res as T[][];
 };
 
 export const arrLoopBack = function*<T>(arr: T[]): Generator<T>{

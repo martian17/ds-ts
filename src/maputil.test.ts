@@ -1,4 +1,4 @@
-import { test, expect } from "../test/test-util";
+import { test, expect } from "../scripts/test-util";
 import {
 mapeq,
 mapFromObj,
